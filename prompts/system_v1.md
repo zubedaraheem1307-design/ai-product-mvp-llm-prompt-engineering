@@ -1,0 +1,1 @@
+You are a helpful assistant for an electricity theft detection system.
