@@ -98,3 +98,21 @@ These assume 30 days, no caching or batch discounts and no retries. A longer fac
 
 ### Check Your Understanding
 (Each member adds their answers below under their own name.)
+
+#### Zubeda Raheem
+
+1. **Probability of the first token for logits [2, 0] at T = 1:** softmax gives e^2 / (e^2 + e^0) = 7.389 / 8.389 = **0.881**, so about 88%.
+2. **Why T = 0 for fees and dates in JSON:** at T = 0 the model picks the most likely token at every step, so the same question gives the same fee or date each time. Extraction needs exact copying, not variety. Hosted models can still vary slightly, as our chai-shop test showed, so we still check the output.
+3. **Monthly cost:** queries = 500 x 10 x 30 = 150,000. One query costs 1,000 x 0.30 / 1,000,000 = USD 0.0003 for input plus 200 x 2.50 / 1,000,000 = USD 0.0005 for output, which is USD 0.0008. 150,000 x 0.0008 = **USD 120 per month**.
+4. **Why the retry wait needs a random part:** without it, every client that hit the rate limit at the same moment would wait exactly 1, 2, then 4 seconds and retry together, hitting the limit again. Random jitter spreads the retries out.
+5. **Is v2 better (17/20 vs 15/20)?** Not proven. The scores are 0.85 and 0.75. With the lab formula the intervals are 0.85 +/- 0.16 (0.69 to 1.00) and 0.75 +/- 0.19 (0.56 to 0.94). They overlap strongly, and the gap of 2 questions is smaller than either margin. v2 may be better, but 20 questions cannot show it. We need more questions.
+6. **Why wrap user text in tags, and what a canary detects:** the tags mark where user data starts and ends, and the prompt says text inside them is data, not instructions, which makes injection like "ignore all previous instructions" less likely to work. It is not a guarantee (our attack 4 tried to close the tag). A canary is a secret string in the system prompt, and if it ever appears in an output, the prompt has leaked.
+
+#### Fatima Akhtar
+
+1. **Probability of the first token for logits [2, 0] at T = 1:** with two tokens, this is the same as 1 / (1 + e^-2) = 1 / 1.135 = **0.881** (88.1%). The second token gets 0.119.
+2. **Why T = 0 for fees and dates in JSON:** a fee or a date has one correct value, so we want the model to always choose its top-ranked token instead of sampling. That makes answers consistent and our evaluation repeatable. T = 0 is not a perfect guarantee on a hosted model, which is why we run important tests more than once.
+3. **Monthly cost:** 500 users x 10 queries x 30 days = 150,000 queries. Input tokens: 150,000 x 1,000 = 150 million, which at USD 0.30 per million is USD 45. Output tokens: 150,000 x 200 = 30 million, which at USD 2.50 per million is USD 75. Total = **USD 120 per month**.
+4. **Why the retry wait needs a random part:** many calls fail together when a limit is hit. Identical waits make them all come back at the same instant (a retry storm). Adding a random amount makes each client wait a slightly different time, so the server sees a smoother load.
+5. **Is v2 better (17/20 vs 15/20)?** We cannot say yet. Wilson 95% intervals are about 0.64 to 0.95 for v2 and 0.53 to 0.89 for v1, and they overlap a lot. The difference is only 2 questions, which could easily be chance. To show an improvement we need more questions or a bigger gap.
+6. **Why wrap user text in tags, and what a canary detects:** tags separate the user's text from our instructions, and we tell the model to treat everything inside them as data. This is one layer of defence against prompt injection. A canary is a unique secret string placed in the system prompt, and if it appears in a reply, it detects that the system prompt was leaked.
