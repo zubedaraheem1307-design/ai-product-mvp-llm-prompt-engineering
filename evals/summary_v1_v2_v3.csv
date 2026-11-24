@@ -1,0 +1,4 @@
+version,valid_json,facts_ok,scope_ok,cites
+v1,0.0,0.39,,0.0
+v2,1.0,1.0,0.86,0.83
+v3,1.0,1.0,0.95,0.83
