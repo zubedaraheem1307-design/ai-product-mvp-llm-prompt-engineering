@@ -2,7 +2,7 @@
 
 **Product:** AI-Based Electricity Theft and Anomaly Detection System for DISCOs (distribution companies) in Pakistan.
 **This week:** we built the first LLM assistant for the product: an analyst help desk that answers monitoring teams' questions about how meters are flagged. It answers only from a fixed fact sheet and replies in validated JSON.
-**Team:** Zubeda Raheem, Fatima Akhtar
+**Team:** Zubeda Raheem, Fatima Akhtar, Luqman Khan
 
 ### Summary (lab checklist)
 - Provider and model: Google Gemini (Google AI Studio), `gemini-3.5-flash-lite`; key stored in Kaggle Secrets
